@@ -4,6 +4,8 @@ import argparse
 import datetime
 import time
 import os.path as osp
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 
 import torch
