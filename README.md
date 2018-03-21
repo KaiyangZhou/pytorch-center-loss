@@ -67,7 +67,7 @@ from center_loss import CenterLoss
 ```python
 center_loss = CenterLoss(num_classes=10, feat_dim=2, use_gpu=True)
 ```
-3. Construct an optimizer for center loss (update class centers)
+3. Construct an optimizer for center loss
 ```python
 optimizer_centloss = torch.optim.SGD(center_loss.parameters(), lr=0.5)
 ```
