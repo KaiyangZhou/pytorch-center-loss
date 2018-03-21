@@ -4,6 +4,7 @@ import argparse
 import datetime
 import time
 import os.path as osp
+from matplotlib import pyplot as plt
 
 import torch
 import torch.nn as nn
@@ -89,7 +90,7 @@ def main():
 
         if args.eval_freq > 0 and (epoch+1) % args.eval_freq == 0 or (epoch+1) == args.max_epoch:
             print("==> Test")
-            acc, err = test(model, testloader, use_gpu)
+            acc, err = test(model, testloader, use_gpu, dataset.num_classes, epoch)
             print("Accuracy (%): {}\t Error rate (%): {}".format(acc, err))
 
     elapsed = round(time.time() - start_time)
@@ -118,22 +119,56 @@ def train(model, criterion_xent, criterion_cent, optimizer_model, optimizer_cent
         if (batch_idx+1) % args.print_freq == 0:
             print("Batch {}/{}\t Loss {:.6f} ({:.6f})".format(batch_idx+1, len(trainloader), losses.val, losses.avg))
 
-def test(model, testloader, use_gpu):
+def test(model, testloader, use_gpu, num_classes, epoch):
     model.eval()
     correct, total = 0, 0
+    if args.plot:
+        all_features, all_labels = [], []
 
     for data, labels in testloader:
         if use_gpu:
             data, labels = data.cuda(), labels.cuda()
         data, labels = Variable(data, volatile=True), Variable(labels)
-        outputs = model(data)
+        features, outputs = model(data)
         predictions = outputs.data.max(1)[1]
         total += labels.size(0)
         correct += (predictions == labels.data).sum()
+        
+        if args.plot:
+            if use_gpu:
+                all_features.append(features.data.cpu().numpy())
+                all_labels.append(labels.data.cpu().numpy())
+            else:
+                all_features.append(features.data.numpy())
+                all_labels.append(labels.data.numpy())
+
+    if args.plot:
+        all_features = torch.cat(all_features, 0)
+        all_labels = torch.cat(all_labels, 0)
+        plot_features(all_features, all_labels, num_classes, epoch)
 
     acc = correct * 100. / total
     err = 100. - acc
     return acc, err
 
+def plot_features(features, labels, num_classes, epoch):
+    """Plot features on 2D plane.
+
+    Args:
+        features: (num_instances, num_features).
+        labels: (num_instances). 
+    """
+    colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
+    for label_idx in range(num_classes):
+        plt.scatter(features[labels==label_idx, 0], features[labels==label_idx, 1], c=colors[label_idx])
+    save_name = osp.join(args.save_dir, 'epoch_' + str(epoch+1) + '.png')
+    plt.savefig(save_name, bbox_inches='tight')
+    plt.close()
+
 if __name__ == '__main__':
     main()
+
+
+
+
+

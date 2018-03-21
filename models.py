@@ -20,8 +20,6 @@ class ConvNet(nn.Module):
         x = F.relu(self.fc1(x))
         x = F.dropout(x, training=self.training)
         y = self.fc2(x)
-        if not self.training:
-            return F.log_softmax(y, dim=1)
         return x, F.log_softmax(y, dim=1)
 
 __factory = {
