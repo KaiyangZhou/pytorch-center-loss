@@ -30,6 +30,6 @@ class CenterLoss(nn.Module):
         for i in range(batch_size):
             dist.append(distmat[i][mask[i]])
         dist = torch.cat(dist)
-        loss = dist.sum() * 0.5
+        loss = dist.sum()
 
         return loss

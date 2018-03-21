@@ -30,7 +30,7 @@ parser.add_argument('--batch-size', type=int, default=128)
 parser.add_argument('--lr-model', type=float, default=0.001, help="learning rate for model")
 parser.add_argument('--lr-cent', type=float, default=0.5, help="learning rate for center loss")
 parser.add_argument('--weight-cent', type=float, default=1, help="weight for center loss")
-parser.add_argument('--max-epoch', type=int, default=50)
+parser.add_argument('--max-epoch', type=int, default=100)
 parser.add_argument('--stepsize', type=int, default=20)
 parser.add_argument('--gamma', type=float, default=0.5, help="learning rate decay")
 # model
@@ -142,7 +142,7 @@ def train(model, criterion_xent, criterion_cent,
                 all_labels.append(labels.data.numpy())
 
         if (batch_idx+1) % args.print_freq == 0:
-            print("Batch {}/{}\t Loss {:.6f} ({:.6f})\t XentLoss {:.6f} ({:.6f})\t CenterLoss {:.6f} ({:.6f})" \
+            print("Batch {}/{}\t Loss {:.6f} ({:.6f}) XentLoss {:.6f} ({:.6f}) CenterLoss {:.6f} ({:.6f})" \
                   .format(batch_idx+1, len(trainloader), losses.val, losses.avg, xent_losses.val, xent_losses.avg, cent_losses.val, cent_losses.avg))
 
     if args.plot:
