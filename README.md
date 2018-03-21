@@ -3,7 +3,7 @@ Pytorch implementation of center loss: [Wen et al. A Discriminative Feature Lear
 
 This loss function is also used by [deep-person-reid](https://github.com/KaiyangZhou/deep-person-reid).
 
-# Get started
+## Get started
 Clone this repo and run the code
 ```bash
 $ git clone https://github.com/KaiyangZhou/pytorch-center-loss
@@ -45,7 +45,7 @@ Accuracy (%): 98.51  Error rate (%): 1.49
 
 Please run `python main.py -h` for more details regarding input arguments.
 
-# Results
+## Results
 We visualize the feature learning process below.
 
 Softmax only. Left: training set. Right: test set.
@@ -60,7 +60,7 @@ Softmax + center loss. Left: training set. Right: test set.
   <img src="gifs/center_test.gif" alt="train" width="30%">
 </div>
 
-# How to use in your own project
+## How to use in your own project
 1. All you need is the `center_loss.py` file
 ```python
 from center_loss import CenterLoss
