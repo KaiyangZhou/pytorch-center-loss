@@ -20,7 +20,7 @@ import models
 from utils import AverageMeter, Logger
 from center_loss import CenterLoss
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser("Center Loss Example")
 # dataset
 parser.add_argument('-d', '--dataset', type=str, default='mnist', choices=['mnist'])
 parser.add_argument('-j', '--workers', default=4, type=int,
@@ -28,8 +28,8 @@ parser.add_argument('-j', '--workers', default=4, type=int,
 # optimization
 parser.add_argument('--batch-size', type=int, default=128)
 parser.add_argument('--lr-model', type=float, default=0.001, help="learning rate for model")
-parser.add_argument('--lr-cent', type=float, default=0.0005, help="learning rate for center loss")
-parser.add_argument('--weight-cent', type=float, default=0.01, help="weight for center loss")
+parser.add_argument('--lr-cent', type=float, default=0.005, help="learning rate for center loss")
+parser.add_argument('--weight-cent', type=float, default=0.005, help="weight for center loss")
 parser.add_argument('--max-epoch', type=int, default=50)
 parser.add_argument('--stepsize', type=int, default=0)
 parser.add_argument('--gamma', type=float, default=0.5, help="learning rate decay")
