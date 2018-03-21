@@ -14,12 +14,14 @@ class MNIST(object):
         pin_memory = True if use_gpu else False
 
         trainset = torchvision.datasets.MNIST(root='./data/mnist', train=True, download=True, transform=transform)
+        
         trainloader = torch.utils.data.DataLoader(
             trainset, batch_size=batch_size, shuffle=True,
             num_workers=num_workers, pin_memory=pin_memory,
         )
         
         testset = torchvision.datasets.MNIST(root='./data/mnist', train=False, download=True, transform=transform)
+        
         testloader = torch.utils.data.DataLoader(
             testset, batch_size=batch_size, shuffle=False,
             num_workers=num_workers, pin_memory=pin_memory,
