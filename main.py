@@ -145,8 +145,8 @@ def test(model, testloader, use_gpu, num_classes, epoch):
                 all_labels.append(labels.data.numpy())
 
     if args.plot:
-        all_features = torch.cat(all_features, 0)
-        all_labels = torch.cat(all_labels, 0)
+        all_features = np.concatenate(all_features, 0)
+        all_labels = np.concatenate(all_labels, 0)
         plot_features(all_features, all_labels, num_classes, epoch)
 
     acc = correct * 100. / total
