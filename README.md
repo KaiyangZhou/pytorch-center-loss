@@ -46,9 +46,9 @@ Please run `python main.py -h` for more details regarding input arguments.
 # Results
 If `--plot` is enabled, training features and test features will be saved in `saved_dir/train` and `saved_dir/train` folders respectively. We visualize the feature learning progress below
 
-![Alt Text](https://github.com/KaiyangZhou/pytorch-center-loss/tree/master/gifs/train.gif)
+![](https://github.com/KaiyangZhou/pytorch-center-loss/tree/master/gifs/train.gif)
 
-![Alt Text](https://github.com/KaiyangZhou/pytorch-center-loss/tree/master/gifs/test.gif)
+![](https://github.com/KaiyangZhou/pytorch-center-loss/tree/master/gifs/test.gif)
 
 
 
