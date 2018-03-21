@@ -47,12 +47,12 @@ Please run `python main.py -h` for more details regarding input arguments.
 If `--plot` is enabled, training features and test features will be saved in `saved_dir/train` and `saved_dir/train` folders respectively. We visualize the feature learning progress below
 
 <div style="float: left">
-    <img src="gifs/train.gif">
+    <img src="gifs/train.gif" width="50%">
     <p>Train</p>
 </div>
 
 <div style="float: left">
-    <img src="gifs/test.gif">
+    <img src="gifs/test.gif" width="50%">
     <p>Test</p>
 </div>
 
