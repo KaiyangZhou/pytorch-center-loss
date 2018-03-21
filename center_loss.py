@@ -32,6 +32,6 @@ class CenterLoss(nn.Module):
             value = value.clamp(min=1e-12, max=1e+12)
             dist.append(value)
         dist = torch.cat(dist)
-        loss = dist.sum()
+        loss = dist.mean()
 
         return loss
