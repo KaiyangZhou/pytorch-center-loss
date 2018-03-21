@@ -3,6 +3,15 @@ import torch.nn as nn
 from torch.autograd import Variable
 
 class CenterLoss(nn.Module):
+    """Center loss.
+    
+    Reference:
+    Wen et al. A Discriminative Feature Learning Approach for Deep Face Recognition. ECCV 2016.
+    
+    Args:
+        num_classes (int): number of classes.
+        feat_dim (int): feature dimension.
+    """
     def __init__(self, num_classes=10, feat_dim=2, use_gpu=True):
         super(CenterLoss, self).__init__()
         self.num_classes = num_classes
