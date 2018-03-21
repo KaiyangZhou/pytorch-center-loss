@@ -28,6 +28,7 @@ parser.add_argument('-j', '--workers', default=4, type=int,
 # optimization
 parser.add_argument('--batch-size', type=int, default=128)
 parser.add_argument('--lr-model', type=float, default=0.001, help="learning rate for model")
+parser.add_argument('--weight-decay', type=float, default=5e-04, help="weight decay for training model")
 parser.add_argument('--lr-cent', type=float, default=0.5, help="learning rate for center loss")
 parser.add_argument('--weight-cent', type=float, default=0.1, help="weight for center loss")
 parser.add_argument('--max-epoch', type=int, default=50)
@@ -77,7 +78,7 @@ def main():
 
     criterion_xent = nn.CrossEntropyLoss()
     criterion_cent = CenterLoss(num_classes=dataset.num_classes, feat_dim=2, use_gpu=use_gpu)
-    optimizer_model = torch.optim.RMSprop(model.parameters(), lr=args.lr_model)
+    optimizer_model = torch.optim.RMSprop(model.parameters(), lr=args.lr_model, weight_decay=args.weight_decay)
     optimizer_centloss = torch.optim.RMSprop(criterion_cent.parameters(), lr=args.lr_cent)
 
     if args.stepsize > 0:
@@ -103,6 +104,8 @@ def main():
 def train(model, criterion_xent, criterion_cent, optimizer_model, optimizer_centloss, trainloader, use_gpu):
     model.train()
     losses = AverageMeter()
+    if args.plot:
+        all_features, all_labels = [], []
 
     for batch_idx, (data, labels) in enumerate(trainloader):
         if use_gpu:
@@ -119,8 +122,21 @@ def train(model, criterion_xent, criterion_cent, optimizer_model, optimizer_cent
         optimizer_centloss.step()
         losses.update(loss.data[0], labels.size(0))
 
+        if args.plot:
+            if use_gpu:
+                all_features.append(features.data.cpu().numpy())
+                all_labels.append(labels.data.cpu().numpy())
+            else:
+                all_features.append(features.data.numpy())
+                all_labels.append(labels.data.numpy())
+
         if (batch_idx+1) % args.print_freq == 0:
             print("Batch {}/{}\t Loss {:.6f} ({:.6f})".format(batch_idx+1, len(trainloader), losses.val, losses.avg))
+
+    if args.plot:
+        all_features = np.concatenate(all_features, 0)
+        all_labels = np.concatenate(all_labels, 0)
+        plot_features(all_features, all_labels, num_classes, epoch, prefix='train')
 
 def test(model, testloader, use_gpu, num_classes, epoch):
     model.eval()
@@ -148,13 +164,13 @@ def test(model, testloader, use_gpu, num_classes, epoch):
     if args.plot:
         all_features = np.concatenate(all_features, 0)
         all_labels = np.concatenate(all_labels, 0)
-        plot_features(all_features, all_labels, num_classes, epoch)
+        plot_features(all_features, all_labels, num_classes, epoch, prefix='test')
 
     acc = correct * 100. / total
     err = 100. - acc
     return acc, err
 
-def plot_features(features, labels, num_classes, epoch):
+def plot_features(features, labels, num_classes, epoch, prefix):
     """Plot features on 2D plane.
 
     Args:
@@ -170,7 +186,7 @@ def plot_features(features, labels, num_classes, epoch):
             s=1,
         )
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    save_name = osp.join(args.save_dir, 'epoch_' + str(epoch+1) + '.png')
+    save_name = osp.join(args.save_dir, prefix, 'epoch_' + str(epoch+1) + '.png')
     plt.savefig(save_name, bbox_inches='tight')
     plt.close()
 
