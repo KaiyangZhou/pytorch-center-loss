@@ -28,7 +28,9 @@ class CenterLoss(nn.Module):
 
         dist = []
         for i in range(batch_size):
-            dist.append(distmat[i][mask[i]])
+            value = distmat[i][mask[i]]
+            value = value.clamp(min=1e-12, max=1e+12)
+            dist.append(value)
         dist = torch.cat(dist)
         loss = dist.sum()
 
