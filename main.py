@@ -25,7 +25,7 @@ parser.add_argument('-j', '--workers', default=4, type=int,
 parser.add_argument('--batch-size', type=int, default=128)
 parser.add_argument('--lr-model', type=float, default=0.001, help="learning rate for model")
 parser.add_argument('--lr-cent', type=float, default=0.0005, help="learning rate for center loss")
-parser.add_argument('--beta', type=float, default=0.01, help="weight for center loss")
+parser.add_argument('--weight-cent', type=float, default=0.01, help="weight for center loss")
 parser.add_argument('--max-epoch', type=int, default=50)
 parser.add_argument('--stepsize', type=int, default=0)
 parser.add_argument('--gamma', type=float, default=0.5, help="learning rate decay")
@@ -38,6 +38,7 @@ parser.add_argument('--gpu', type=str, default='0')
 parser.add_argument('--seed', type=int, default=1)
 parser.add_argument('--use-cpu', action='store_true')
 parser.add_argument('--save-dir', type=str, default='log')
+parser.add_argument('--plot', action='store_true', help="whether to plot features for every epoch")
 
 args = parser.parse_args()
 
@@ -106,7 +107,7 @@ def train(model, criterion_xent, criterion_cent, optimizer_model, optimizer_cent
         features, outputs = model(data)
         loss_xent = criterion_xent(outputs, labels)
         loss_cent = criterion_cent(features, labels)
-        loss = loss_xent + loss_cent * args.beta
+        loss = loss_xent + loss_cent * args.weight_cent
         optimizer_model.zero_grad()
         optimizer_centloss.zero_grad()
         loss.backward()
