@@ -7,6 +7,7 @@ import os.path as osp
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
+import numpy as np
 
 import torch
 import torch.nn as nn
