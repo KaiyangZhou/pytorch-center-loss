@@ -13,6 +13,11 @@ class ConvNet(nn.Module):
         self.fc1 = nn.Linear(320, 2)
         self.fc2 = nn.Linear(2, num_classes)
 
+        self.fc1.weight.data.normal_(0, math.sqrt(2. / 322))
+        self.fc1.bias.data.zero_()
+        self.fc2.weight.data.normal_(0, math.sqrt(2. / (2 + num_classes)))
+        self.fc2.bias.data.zero_()
+
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
