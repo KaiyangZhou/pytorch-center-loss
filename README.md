@@ -60,7 +60,7 @@ Softmax + center loss. Left: training set. Right: test set.
   <img src="gifs/center_test.gif" alt="train" width="30%">
 </div>
 
-## How to use in your own project
+## How to use center loss in your own project
 1. All you need is the `center_loss.py` file
 ```python
 from center_loss import CenterLoss
