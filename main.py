@@ -28,11 +28,10 @@ parser.add_argument('-j', '--workers', default=4, type=int,
 # optimization
 parser.add_argument('--batch-size', type=int, default=128)
 parser.add_argument('--lr-model', type=float, default=0.001, help="learning rate for model")
-parser.add_argument('--weight-decay', type=float, default=5e-04, help="weight decay for training model")
-parser.add_argument('--lr-cent', type=float, default=0.3, help="learning rate for center loss")
+parser.add_argument('--lr-cent', type=float, default=0.5, help="learning rate for center loss")
 parser.add_argument('--weight-cent', type=float, default=1, help="weight for center loss")
 parser.add_argument('--max-epoch', type=int, default=50)
-parser.add_argument('--stepsize', type=int, default=0)
+parser.add_argument('--stepsize', type=int, default=20)
 parser.add_argument('--gamma', type=float, default=0.5, help="learning rate decay")
 # model
 parser.add_argument('--model', type=str, default='cnn')
@@ -78,8 +77,10 @@ def main():
 
     criterion_xent = nn.CrossEntropyLoss()
     criterion_cent = CenterLoss(num_classes=dataset.num_classes, feat_dim=2, use_gpu=use_gpu)
-    optimizer_model = torch.optim.RMSprop(model.parameters(), lr=args.lr_model, weight_decay=args.weight_decay)
-    optimizer_centloss = torch.optim.RMSprop(criterion_cent.parameters(), lr=args.lr_cent)
+    #optimizer_model = torch.optim.RMSprop(model.parameters(), lr=args.lr_model, weight_decay=args.weight_decay)
+    #optimizer_centloss = torch.optim.RMSprop(criterion_cent.parameters(), lr=args.lr_cent)
+    optimizer_model = torch.optim.SGD(model.parameters(), lr=args.lr_model, weight_decay=5e-04, momentum=0.9)
+    optimizer_centloss = torch.optim.SGD(criterion_cent.parameters(), lr=args.lr_cent)
 
     if args.stepsize > 0:
         scheduler = lr_scheduler.StepLR(optimizer_model, step_size=args.stepsize, gamma=args.gamma)
