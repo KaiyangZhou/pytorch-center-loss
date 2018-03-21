@@ -88,7 +88,9 @@ def main():
 
     for epoch in range(args.max_epoch):
         print("==> Epoch {}/{}".format(epoch+1, args.max_epoch))
-        train(model, criterion_xent, criterion_cent, optimizer_model, optimizer_centloss, trainloader, use_gpu)
+        train(model, criterion_xent, criterion_cent,
+              optimizer_model, optimizer_centloss,
+              trainloader, use_gpu, dataset.num_classes, epoch)
 
         if args.stepsize > 0: scheduler.step()
 
@@ -101,7 +103,9 @@ def main():
     elapsed = str(datetime.timedelta(seconds=elapsed))
     print("Finished. Total elapsed time (h:m:s): {}".format(elapsed))
 
-def train(model, criterion_xent, criterion_cent, optimizer_model, optimizer_centloss, trainloader, use_gpu):
+def train(model, criterion_xent, criterion_cent,
+          optimizer_model, optimizer_centloss,
+          trainloader, use_gpu, num_classes, epoch):
     model.train()
     losses = AverageMeter()
     if args.plot:
