@@ -163,7 +163,12 @@ def plot_features(features, labels, num_classes, epoch):
     """
     colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
     for label_idx in range(num_classes):
-        plt.scatter(features[labels==label_idx, 0], features[labels==label_idx, 1], c=colors[label_idx])
+        plt.scatter(
+            features[labels==label_idx, 0],
+            features[labels==label_idx, 1],
+            c=colors[label_idx],
+            s=1,
+        )
     save_name = osp.join(args.save_dir, 'epoch_' + str(epoch+1) + '.png')
     plt.savefig(save_name, bbox_inches='tight')
     plt.close()
