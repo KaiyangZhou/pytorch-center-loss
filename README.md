@@ -1,6 +1,8 @@
 # pytorch-center-loss
 Pytorch implementation of center loss: [Wen et al. A Discriminative Feature Learning Approach for Deep Face Recognition. ECCV 2016.](https://ydwen.github.io/papers/WenECCV16.pdf)
 
+This loss function is also used by [deep-person-reid](https://github.com/KaiyangZhou/deep-person-reid).
+
 # Get started
 Clone this repo and run the code
 ```bash
