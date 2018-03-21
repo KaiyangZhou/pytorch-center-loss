@@ -44,14 +44,14 @@ Accuracy (%): 98.51  Error rate (%): 1.49
 Please run `python main.py -h` for more details regarding input arguments.
 
 # Results
-If `--plot` is enabled, training features and test features will be saved in `saved_dir/train` and `saved_dir/train` folders respectively. We visualize the feature learning progress below
+If `--plot` is enabled, training features and test features will be saved in `saved_dir/train` and `saved_dir/train` folders respectively. If `--weight-center` is set to 0, center loss is disabled.
 
+We visualize the feature learning progress below
 
-<p align="center"><img src="gifs/train.gif" alt="train" width="40%"></p>
-<p align="center">Train</p>
-
-<p align="center"><img src="gifs/test.gif" alt="test" width="40%"></p>
-<p align="center">Test</p>
+<div>
+  <img src="gifs/center_train.gif" alt="train" width="40%">
+  <img src="gifs/center_test.gif" alt="train" width="40%">
+</div>
 
 
 
