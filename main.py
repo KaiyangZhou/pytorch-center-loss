@@ -169,6 +169,7 @@ def plot_features(features, labels, num_classes, epoch):
             c=colors[label_idx],
             s=1,
         )
+    plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     save_name = osp.join(args.save_dir, 'epoch_' + str(epoch+1) + '.png')
     plt.savefig(save_name, bbox_inches='tight')
     plt.close()
