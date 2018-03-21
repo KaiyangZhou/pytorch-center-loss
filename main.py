@@ -77,8 +77,6 @@ def main():
 
     criterion_xent = nn.CrossEntropyLoss()
     criterion_cent = CenterLoss(num_classes=dataset.num_classes, feat_dim=2, use_gpu=use_gpu)
-    #optimizer_model = torch.optim.RMSprop(model.parameters(), lr=args.lr_model, weight_decay=args.weight_decay)
-    #optimizer_centloss = torch.optim.RMSprop(criterion_cent.parameters(), lr=args.lr_cent)
     optimizer_model = torch.optim.SGD(model.parameters(), lr=args.lr_model, weight_decay=5e-04, momentum=0.9)
     optimizer_centloss = torch.optim.SGD(criterion_cent.parameters(), lr=args.lr_cent)
 
