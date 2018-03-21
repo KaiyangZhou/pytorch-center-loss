@@ -51,9 +51,9 @@ If `--plot` is enabled, training features and test features will be saved in `sa
         <img src="gifs/train.gif" width="40%">
         <p>Train</p>
     </div>
-    <div style="float: left">
+    <div style="float: right">
         <img src="gifs/test.gif" width="40%">
-        <p>Train</p>
+        <p>Test</p>
     </div>
 </div>
 
