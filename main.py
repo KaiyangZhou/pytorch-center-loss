@@ -108,7 +108,10 @@ def train(model, criterion_xent, criterion_cent,
           optimizer_model, optimizer_centloss,
           trainloader, use_gpu, num_classes, epoch):
     model.train()
+    xent_losses = AverageMeter()
+    cent_losses = AverageMeter()
     losses = AverageMeter()
+    
     if args.plot:
         all_features, all_labels = [], []
 
@@ -125,7 +128,10 @@ def train(model, criterion_xent, criterion_cent,
         loss.backward()
         optimizer_model.step()
         optimizer_centloss.step()
+        
         losses.update(loss.data[0], labels.size(0))
+        xent_losses.update(loss_xent.data[0], labels.size(0))
+        cent_losses.update(loss_cent.data[0], labels.size(0))
 
         if args.plot:
             if use_gpu:
@@ -136,7 +142,8 @@ def train(model, criterion_xent, criterion_cent,
                 all_labels.append(labels.data.numpy())
 
         if (batch_idx+1) % args.print_freq == 0:
-            print("Batch {}/{}\t Loss {:.6f} ({:.6f})".format(batch_idx+1, len(trainloader), losses.val, losses.avg))
+            print("Batch {}/{}\t Loss {:.6f} ({:.6f})\t XentLoss {:.6f} ({:.6f})\t CenterLoss {:.6f} ({:.6f})" \
+                  .format(batch_idx+1, len(trainloader), losses.val, losses.avg, xent_losses.val, xent_losses.avg, cent_losses.val, cent_losses.avg))
 
     if args.plot:
         all_features = np.concatenate(all_features, 0)
