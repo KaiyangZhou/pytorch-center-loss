@@ -44,9 +44,7 @@ Accuracy (%): 98.51  Error rate (%): 1.49
 Please run `python main.py -h` for more details regarding input arguments.
 
 # Results
-If `--plot` is enabled, training features and test features will be saved in `saved_dir/train` and `saved_dir/train` folders respectively. If `--weight-center` is set to 0, center loss is disabled.
-
-We visualize the feature learning progress below
+We visualize the feature learning process below.
 
 Softmax only. Left: training set. Right: test set.
 <div align="center">
@@ -59,6 +57,26 @@ Softmax + center loss. Left: training set. Right: test set.
   <img src="gifs/center_train.gif" alt="train" width="30%">
   <img src="gifs/center_test.gif" alt="train" width="30%">
 </div>
+
+# How to use in your own project
+1. All you need is the `center_loss.py` file
+```python
+from center_loss import CenterLoss
+```
+2. Initialize center loss in the main function
+```python
+center_loss = CenterLoss(num_classes=10, feat_dim=2, use_gpu=True)
+```
+3. Construct an optimizer for center loss (update class centers)
+```python
+optimizer_centloss = torch.optim.SGD(center_loss.parameters(), lr=0.5)
+```
+4. Update class centers just like how you update a pytorch model
+```python
+optimizer_centloss.zero_grad()
+loss.backward()
+optimizer_centloss.step()
+```
 
 
 
