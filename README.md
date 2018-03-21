@@ -48,11 +48,13 @@ If `--plot` is enabled, training features and test features will be saved in `sa
 
 We visualize the feature learning progress below
 
+Softmax only. Left: training set. Right: test set.
 <div align="center">
   <img src="gifs/softmax_train.gif" alt="train" width="30%">
   <img src="gifs/softmax_test.gif" alt="train" width="30%">
 </div>
 
+Softmax + center loss. Left: training set. Right: test set.
 <div align="center">
   <img src="gifs/center_train.gif" alt="train" width="30%">
   <img src="gifs/center_test.gif" alt="train" width="30%">
