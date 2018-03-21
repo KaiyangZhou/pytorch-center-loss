@@ -48,9 +48,14 @@ If `--plot` is enabled, training features and test features will be saved in `sa
 
 We visualize the feature learning progress below
 
-<div>
-  <img src="gifs/center_train.gif" alt="train" width="40%">
-  <img src="gifs/center_test.gif" alt="train" width="40%">
+<div align="center">
+  <img src="gifs/softmax_train.gif" alt="train" width="30%">
+  <img src="gifs/softmax_test.gif" alt="train" width="30%">
+</div>
+
+<div align="center">
+  <img src="gifs/center_train.gif" alt="train" width="30%">
+  <img src="gifs/center_test.gif" alt="train" width="30%">
 </div>
 
 
