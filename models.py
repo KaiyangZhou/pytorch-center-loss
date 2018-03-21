@@ -5,6 +5,7 @@ from torch.nn import functional as F
 import math
 
 class ConvNet(nn.Module):
+    """LeNet++ as described in the Center Loss paper"""
     def __init__(self, num_classes):
         super(ConvNet, self).__init__()
         self.conv1_1 = nn.Conv2d(1, 32, 5, stride=1, padding=2)
