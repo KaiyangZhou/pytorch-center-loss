@@ -75,12 +75,15 @@ optimizer_centloss = torch.optim.SGD(center_loss.parameters(), lr=0.5)
 ```
 4. Update class centers just like how you update a pytorch model
 ```python
-# features (Variable): a 2D torch float tensor with shape (batch_size, feat_dim).
-# labels (Variable): 1D torch long tensor with shape (batch_size).
-# note: you will have other losses such as softmax loss (see main.py for more info).
-loss = center_loss(features, labels)
+# features (Variable): a 2D torch float tensor with shape (batch_size, feat_dim)
+# labels (Variable): 1D torch long tensor with shape (batch_size)
+# alpha (float): weight for center loss
+loss = center_loss(features, labels) * alpha + other_loss
 optimizer_centloss.zero_grad()
 loss.backward()
+# multiple (1./alpha) in order to remove the effect of alpha on updating centers
+for param in center_loss.parameters():
+    param.grad.data *= (1./alpha)
 optimizer_centloss.step()
 ```
 
