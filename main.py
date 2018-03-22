@@ -120,14 +120,15 @@ def train(model, criterion_xent, criterion_cent,
         features, outputs = model(data)
         loss_xent = criterion_xent(outputs, labels)
         loss_cent = criterion_cent(features, labels)
-        # here weight_cent is multiplied to the gradients wrt centers,
-        # which differ from the original paper (see line 6 in Alg. 1).
         loss_cent *= args.weight_cent
         loss = loss_xent + loss_cent
         optimizer_model.zero_grad()
         optimizer_centloss.zero_grad()
         loss.backward()
         optimizer_model.step()
+        # by doing so, weight_cent would not impact on the learning of centers
+        for param in criterion_cent.parameters():
+            param.grad.data *= (1. / args.weight_cent)
         optimizer_centloss.step()
         
         losses.update(loss.data[0], labels.size(0))
