@@ -44,7 +44,7 @@ class ConvNet(nn.Module):
         x = self.prelu_fc1(self.fc1(x))
         y = self.fc2(x)
 
-        return x, F.log_softmax(y, dim=1)
+        return x, y
 
 __factory = {
     'cnn': ConvNet,
