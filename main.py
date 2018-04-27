@@ -11,7 +11,6 @@ import numpy as np
 
 import torch
 import torch.nn as nn
-from torch.autograd import Variable
 from torch.optim import lr_scheduler
 import torch.backends.cudnn as cudnn
 
@@ -116,7 +115,6 @@ def train(model, criterion_xent, criterion_cent,
     for batch_idx, (data, labels) in enumerate(trainloader):
         if use_gpu:
             data, labels = data.cuda(), labels.cuda()
-        data, labels = Variable(data), Variable(labels)
         features, outputs = model(data)
         loss_xent = criterion_xent(outputs, labels)
         loss_cent = criterion_cent(features, labels)
@@ -131,9 +129,9 @@ def train(model, criterion_xent, criterion_cent,
             param.grad.data *= (1. / args.weight_cent)
         optimizer_centloss.step()
         
-        losses.update(loss.data[0], labels.size(0))
-        xent_losses.update(loss_xent.data[0], labels.size(0))
-        cent_losses.update(loss_cent.data[0], labels.size(0))
+        losses.update(loss.item(), labels.size(0))
+        xent_losses.update(loss_xent.item(), labels.size(0))
+        cent_losses.update(loss_cent.item(), labels.size(0))
 
         if args.plot:
             if use_gpu:
@@ -158,22 +156,22 @@ def test(model, testloader, use_gpu, num_classes, epoch):
     if args.plot:
         all_features, all_labels = [], []
 
-    for data, labels in testloader:
-        if use_gpu:
-            data, labels = data.cuda(), labels.cuda()
-        data, labels = Variable(data, volatile=True), Variable(labels)
-        features, outputs = model(data)
-        predictions = outputs.data.max(1)[1]
-        total += labels.size(0)
-        correct += (predictions == labels.data).sum()
-        
-        if args.plot:
+    with torch.no_grad():
+        for data, labels in testloader:
             if use_gpu:
-                all_features.append(features.data.cpu().numpy())
-                all_labels.append(labels.data.cpu().numpy())
-            else:
-                all_features.append(features.data.numpy())
-                all_labels.append(labels.data.numpy())
+                data, labels = data.cuda(), labels.cuda()
+            features, outputs = model(data)
+            predictions = outputs.data.max(1)[1]
+            total += labels.size(0)
+            correct += (predictions == labels.data).sum()
+            
+            if args.plot:
+                if use_gpu:
+                    all_features.append(features.data.cpu().numpy())
+                    all_labels.append(labels.data.cpu().numpy())
+                else:
+                    all_features.append(features.data.numpy())
+                    all_labels.append(labels.data.numpy())
 
     if args.plot:
         all_features = np.concatenate(all_features, 0)

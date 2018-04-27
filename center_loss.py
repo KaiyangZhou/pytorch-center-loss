@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from torch.autograd import Variable
 
 class CenterLoss(nn.Module):
     """Center loss.
@@ -36,7 +35,6 @@ class CenterLoss(nn.Module):
 
         classes = torch.arange(self.num_classes).long()
         if self.use_gpu: classes = classes.cuda()
-        classes = Variable(classes)
         labels = labels.unsqueeze(1).expand(batch_size, self.num_classes)
         mask = labels.eq(classes.expand(batch_size, self.num_classes))
 
