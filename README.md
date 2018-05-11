@@ -93,7 +93,7 @@ for param in center_loss.parameters():
 optimizer_centloss.step()
 ```
 If you adopt the second way (i.e. use one optimizer for both model and center loss), the update code would look like
-```
+```python
 loss = center_loss(features, labels) * alpha + other_loss
 optimizer.zero_grad()
 loss.backward()
