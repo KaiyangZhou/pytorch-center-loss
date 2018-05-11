@@ -73,6 +73,12 @@ center_loss = CenterLoss(num_classes=10, feat_dim=2, use_gpu=True)
 ```python
 optimizer_centloss = torch.optim.SGD(center_loss.parameters(), lr=0.5)
 ```
+Alternatively, you can merge optimizers of model and center loss, like
+```
+params = list(model.parameters()) + list(center_loss.parameters())
+optimizer = torch.optim.SGD(params, lr=0.1) # here lr is the overall learning rate
+```
+
 4. Update class centers just like how you update a pytorch model
 ```python
 # features (Variable): a 2D torch float tensor with shape (batch_size, feat_dim)
@@ -86,8 +92,13 @@ for param in center_loss.parameters():
     param.grad.data *= (1./alpha)
 optimizer_centloss.step()
 ```
-
-
-
-
-
+If you adopt the second way (i.e. use one optimizer for both model and center loss), the update code would look like
+```
+loss = center_loss(features, labels) * alpha + other_loss
+optimizer.zero_grad()
+loss.backward()
+for param in center_loss.parameters():
+    # lr_cent is learning rate for center loss, e.g. lr_cent = 0.5
+    param.grad.data *= (lr_cent / (alpha * lr))
+optimizer.step()
+```
