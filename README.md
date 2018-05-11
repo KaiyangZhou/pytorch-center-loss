@@ -81,8 +81,8 @@ optimizer = torch.optim.SGD(params, lr=0.1) # here lr is the overall learning ra
 
 4. Update class centers just like how you update a pytorch model
 ```python
-# features (Variable): a 2D torch float tensor with shape (batch_size, feat_dim)
-# labels (Variable): 1D torch long tensor with shape (batch_size)
+# features (torch tensor): a 2D torch float tensor with shape (batch_size, feat_dim)
+# labels (torch long tensor): 1D torch long tensor with shape (batch_size)
 # alpha (float): weight for center loss
 loss = center_loss(features, labels) * alpha + other_loss
 optimizer_centloss.zero_grad()
