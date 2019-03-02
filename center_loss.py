@@ -38,7 +38,7 @@ class CenterLoss(nn.Module):
         labels = labels.unsqueeze(1).expand(batch_size, self.num_classes)
         mask = labels.eq(classes.expand(batch_size, self.num_classes))
 
-        dist = distmat*mask.float()
-        loss = dist.clamp(min=1e-12, max=1e+12).sum()/batch_size
+        dist = distmat * mask.float()
+        loss = dist.clamp(min=1e-12, max=1e+12).sum() / batch_size
 
         return loss
