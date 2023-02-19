@@ -1,5 +1,9 @@
+import warnings
+
 import torch
-import torch.nn as nn
+from torch import nn
+from torch.nn import functional as F
+
 
 class CenterLoss(nn.Module):
     """Center loss.
@@ -11,16 +15,16 @@ class CenterLoss(nn.Module):
         num_classes (int): number of classes.
         feat_dim (int): feature dimension.
     """
-    def __init__(self, num_classes=10, feat_dim=2, use_gpu=True):
+    def __init__(self, num_classes: int = 10, feat_dim: int = 2, use_gpu: bool = None, clamp: int = 1e-12):
         super(CenterLoss, self).__init__()
+        if use_gpu is not None:
+            warnings.warning(f"Ignoring explicitly set {use_gpu=}. Move the model via .to(device)")
         self.num_classes = num_classes
         self.feat_dim = feat_dim
         self.use_gpu = use_gpu
+        self.clamp = clamp
 
-        if self.use_gpu:
-            self.centers = nn.Parameter(torch.randn(self.num_classes, self.feat_dim).cuda())
-        else:
-            self.centers = nn.Parameter(torch.randn(self.num_classes, self.feat_dim))
+        self.centers = nn.Parameter(torch.randn(self.num_classes, self.feat_dim))
 
     def forward(self, x, labels):
         """
@@ -28,17 +32,9 @@ class CenterLoss(nn.Module):
             x: feature matrix with shape (batch_size, feat_dim).
             labels: ground truth labels with shape (batch_size).
         """
-        batch_size = x.size(0)
-        distmat = torch.pow(x, 2).sum(dim=1, keepdim=True).expand(batch_size, self.num_classes) + \
-                  torch.pow(self.centers, 2).sum(dim=1, keepdim=True).expand(self.num_classes, batch_size).t()
-        distmat.addmm_(1, -2, x, self.centers.t())
-
-        classes = torch.arange(self.num_classes).long()
-        if self.use_gpu: classes = classes.cuda()
-        labels = labels.unsqueeze(1).expand(batch_size, self.num_classes)
-        mask = labels.eq(classes.expand(batch_size, self.num_classes))
-
-        dist = distmat * mask.float()
-        loss = dist.clamp(min=1e-12, max=1e+12).sum() / batch_size
-
-        return loss
+        centers = centers.t()
+        distmat = x.square().sum(dim=1, keepdim=True) + centers.square().sum(dim=0, keepdim=True)
+        # B F @ B C -> Gather C -> B F @ F
+        distmat = distmat - 2 * x @ centers
+        dist = torch.gather(distmat, 1, labels.view(-1, 1))
+        return dist.clamp(min=self.clamp, max=1 / self.clamp).mean()
