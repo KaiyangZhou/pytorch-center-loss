@@ -32,9 +32,6 @@ class CenterLoss(nn.Module):
             x: feature matrix with shape (batch_size, feat_dim).
             labels: ground truth labels with shape (batch_size).
         """
-        centers = centers.t()
-        distmat = x.square().sum(dim=1, keepdim=True) + centers.square().sum(dim=0, keepdim=True)
-        # B F @ B C -> Gather C -> B F @ F
-        distmat = distmat - 2 * x @ centers
-        dist = torch.gather(distmat, 1, labels.view(-1, 1))
+        centers = torch.index_select(self.centers, 0, labels.view(-1))  # [Classes, Features] (gather) [Batch]  -> [Batch, Features]
+        dist = (x - centers).square().sum(dim=1, keepdim=False)
         return dist.clamp(min=self.clamp, max=1 / self.clamp).mean()
