@@ -33,5 +33,4 @@ class CenterLoss(nn.Module):
             labels: ground truth labels with shape (batch_size).
         """
         centers = torch.index_select(self.centers, 0, labels.view(-1))  # [Classes, Features] (gather) [Batch]  -> [Batch, Features]
-        dist = (x - centers).square().sum(dim=1, keepdim=False)
-        return dist.clamp(min=self.clamp, max=1 / self.clamp).mean()
+        return F.mse_loss(x, centers) * self.feat_dim  # mean across all axes except features
